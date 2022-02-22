@@ -1,0 +1,386 @@
+--- [[ Shadow DIO's Time Stop ]] ---
+-- by fo43123
+
+--Moveset--
+
+--F: Stop Time
+
+--V: Time Stop Teleport
+
+--Y: Surprise Teleport
+
+--G: Pose
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Tescalus/Pendulum-Hubs-Source/main/Reanimation.lua"))()
+warn("Netless Activated!")
+loadstring(game:GetObjects("rbxassetid://5425999987")[1].Source)()
+
+_G.key = Enum.KeyCode.R -- Change to whatever if you don't know Keycode go to roblox api doc
+
+loadstring(game:GetObjects("rbxassetid://6902198380")[1].Source)()
+
+loadstring(game:GetObjects("rbxassetid://7065374981")[1].Source)()
+
+loadstring(game:GetObjects("rbxassetid://8899448744")[1].Source)()
+
+loadstring(game:HttpGet("https://paste.gg/p/anonymous/cb1c7198b269449eb8a2cf8ced061bed/files/4a98e88f82ee47388b3030a7f000b34e/raw", true))()
+local plr = game:GetService("Players").LocalPlayer
+local me = game.Players.LocalPlayer
+local TweenService = game:GetService("TweenService")
+local ColorCorrection = Instance.new("ColorCorrectionEffect", game:GetService("Lighting"))
+local mouse = me:GetMouse()
+local char = me.Character
+local hum = char:FindFirstChild('Humanoid')
+local hd = char:FindFirstChild('Head')
+local ts = char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
+local ra = char:FindFirstChild('Right Arm') or char:FindFirstChild('RightUpperArm')
+local la = char:FindFirstChild('Left Arm') or char:FindFirstChild('LeftUpperArm')
+local rl = char:FindFirstChild('Right Leg') or char:FindFirstChild('RightUpperLeg')
+local ll = char:FindFirstChild('Left Leg') or char:FindFirstChild('LeftUpperLeg')
+local root = char:FindFirstChild('HumanoidRootPart')
+local rj = root:FindFirstChild('RootJoint')
+local rs = ts:FindFirstChild('Right Shoulder')
+local ls = ts:FindFirstChild('Left Shoulder')
+local rh = ts:FindFirstChild('Right Hip')
+local lh = ts:FindFirstChild('Left Hip')
+local nk = ts:FindFirstChild('Neck')
+local anim = char:FindFirstChild('Animate')
+local base = workspace:FindFirstChild('Baseplate') or workspace:FindFirstChild('Base')
+local cantimestop = true
+local cooldown = false
+local cc = workspace.CurrentCamera
+local cos = math.cos
+local sin = math.sin
+local rad = math.rad
+local rand = math.random
+local cfn = CFrame.new
+local cfa = CFrame.Angles
+local v3 = Vector3.new
+local str = string
+local unfreeze = {}
+local health = {}
+local connect = {}
+local sine = 0
+local effects = nil
+hum.WalkSpeed = 23
+function MultiTween(Inst, Type, To, Time, Direction)	
+	local Dir = nil
+	if Direction == nil then Dir = Enum.EasingDirection.Out else Dir = Direction end
+	local Table = {}; Table[Type] = To
+	local Info = TweenInfo.new(Time, Enum.EasingStyle.Sine, Dir)
+	local Tween = TweenService:Create(Inst, Info, Table); Tween:Play()
+	return Tween
+end
+
+
+if char:FindFirstChild('Effects') then
+    effects = char:FindFirstChild('Effects')
+else
+    effects = Instance.new('Folder', char)
+    effects.Name = 'Effects'
+end
+ 
+ArtificialHB = Instance.new('BindableEvent', script)
+ArtificialHB.Name = 'Heartbeat'
+script:WaitForChild('Heartbeat')
+ 
+frame = 1 / 60
+tf = 0
+allowframeloss = false
+tossremainder = false
+lastframe = tick()
+script.Heartbeat:Fire()
+ 
+game:GetService('RunService').Heartbeat:connect(function(s, p)
+    tf = tf + s
+    if tf >= frame then
+        if allowframeloss then
+            script.Heartbeat:Fire()
+            lastframe = tick()
+        else
+            for i = 1, math.floor(tf / frame) do
+                script.Heartbeat:Fire()
+            end
+            lastframe = tick()
+        end
+        if tossremainder then
+            tf = 0
+        else
+            tf = tf - frame * math.floor(tf / frame)
+        end
+    end
+end)
+ 
+function swait(t)
+    if t == 0 or t == nil then
+        script.Heartbeat.Event:Wait()
+    else
+        for i = 0, t do
+            script.Heartbeat.Event:Wait()
+        end
+    end
+end
+ 
+function sound(id, parent, vol, pitch, timepos)
+    local s = Instance.new('Sound')
+    s.Parent = parent
+    s.SoundId = id
+    s.Volume = vol
+    s.PlaybackSpeed = pitch
+    s.TimePosition = timepos
+    s:Play()
+    game.Debris:AddItem(s, s.PlaybackSpeed + 5)
+end
+ 
+function camshake(duration, intensity)
+    coroutine.wrap(function()
+        for i = 1, duration do
+            hum.CameraOffset = hum.CameraOffset:lerp(v3(rand(-1, 1), rand(-1, 1), rand(-1, 1)), 0.1 * intensity)
+            swait()
+        end
+        hum.CameraOffset = v3(0, 0, 0)
+    end)()
+end
+ 
+function findascendant(obj, class)
+    local par = obj
+    local ret = nil
+    pcall(function()
+        repeat
+            par = par.Parent
+            if par:IsA(class) then
+                ret = par
+                break
+            end
+        until par == nil
+    end)
+    return ret
+end
+ 
+local TimeStopSounds = {
+   
+    TokiWo = 'rbxassetid://6092622484';
+    TimeResume = 'rbxassetid://5838197255';
+   
+}
+ 
+function timestop()
+   sound(TimeStopSounds.TokiWo, ts, 5, 1, 0)
+   wait(1.5)
+    cantimestop = false
+    coroutine.wrap(function()
+    local effect1 = Instance.new('Part', effects)
+    effect1.Shape = 'Ball'
+    effect1.Material = 'ForceField'
+    effect1.Anchored = true
+    effect1.CanCollide = false
+    effect1.Size = v3(0, 0, 0)
+    effect1.Transparency = 0
+            TweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.5), {FieldOfView = 85}):Play()
+            TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.8), {Saturation = 1}):Play()
+            TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.8), {Contrast = -2}):Play()
+            settings().Network.IncomingReplicationLag = math.huge
+            local blur = Instance.new("BlurEffect", game:GetService("Lighting"))
+            TweenService:Create(blur, TweenInfo.new(0.8), {Size = 10}):Play()
+    for i,v in pairs(workspace:GetDescendants()) do
+        if v:IsA('BasePart') then
+            if not v.Anchored and not findascendant(v, 'Tool') and not findascendant(v, 'HopperBin') then
+                if not v:IsDescendantOf(char) then
+                    v.Anchored = true
+                    table.insert(unfreeze, v)
+                end
+            end
+        end
+  			if v:IsA("Sound") then
+				if not v:IsDescendantOf(char) then
+				if v:FindFirstChild("SpeedVal~~~")==nil then
+					local Speed = Instance.new("NumberValue",v)
+					Speed.Value = v.PlaybackSpeed
+					Speed.Name = "SpeedVal~~~"
+					MultiTween(v,"PlaybackSpeed",0,4)
+					table.insert(unfreeze, v)
+				end
+			end
+	end
+        if v:IsA('Humanoid') then
+            local last = v.Health
+            local always = last
+            local e = v.HealthChanged:connect(function(hp)
+                if last - hp > 0 then
+                    table.insert(health, {humanoid = v, change = last - hp})
+                end
+                last = hp
+                v.Health = always
+            end)
+            table.insert(connect, e)
+        end
+        if v:IsA('BodyVelocity') then
+            local lastforce = v.MaxForce
+            v.MaxForce = v3(0, 0, 0)
+            table.insert(unfreeze, {force = v, change = lastforce})
+        end
+        if v:IsA('BodyPosition') then
+            local lastposition = v.MaxForce
+            local lastD = v.D
+            local lastP = v.P
+            v.MaxForce = v3(0, 0, 0)
+            v.D = 0
+            v.P = 0
+            table.insert(unfreeze, {position = v, change = lastposition, dchange = lastD, pchange = lastP})
+        end
+        if v:IsA('BodyForce') then
+            local lastforce2 = v.Force
+            v.Force = v3(0, 0, 0)
+            table.insert(unfreeze, {force2 = v, fchange = lastforce2})
+        end
+    end
+    ee = workspace.DescendantAdded:Connect(function(v)
+        if v:IsA('BasePart') then
+            if not v.Anchored and not findascendant(v, 'Tool') and not findascendant(v, 'HopperBin') then
+                if not v:IsDescendantOf(char) then
+                    v.Anchored = true
+                    table.insert(unfreeze, v)
+                end
+            end
+        end
+  			if v:IsA("Sound") then
+				if not v:IsDescendantOf(char) then
+				if v:FindFirstChild("SpeedVal~~~")==nil then
+					local Speed = Instance.new("NumberValue",v)
+					Speed.Value = v.PlaybackSpeed
+					Speed.Name = "SpeedVal~~~"
+					MultiTween(v,"PlaybackSpeed",0,4)
+					table.insert(unfreeze, v)
+				end
+			end
+	end
+        if v:IsA('Humanoid') then
+            local last = v.Health
+            local always = last
+            local e = v.HealthChanged:connect(function(hp)
+                if last - hp > 0 then
+                    table.insert(health, {humanoid = v, change = last - hp})
+                end
+                last = hp
+                v.Health = always
+            end)
+            table.insert(connect, e)
+        end
+    end)
+    coroutine.wrap(function()
+    for i = 1, 1000 do
+        effect1.CFrame = ts.CFrame
+        effect1.Size = effect1.Size:lerp(v3(50, 50, 50), 0.015)
+        effect1.Transparency = effect1.Transparency + 0.010
+        if effect1.Transparency >= 1 then
+            effect1:Destroy()
+        end
+        swait()
+    end
+    end)()
+    wait(0.5)
+           TweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.5), {FieldOfView = 70}):Play()
+            TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.8), {Saturation = -1}):Play()
+            TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.8), {Contrast = -2}):Play()
+            game:GetService("Lighting").ColorCorrection.TintColor = Color3.fromRGB(250,250,250)
+            TweenService:Create(blur, TweenInfo.new(0.8), {Size = 0}):Play()
+    end)()
+    wait(1.5)
+    cooldown = true
+end
+ 
+function timeresume()
+    sound(TimeStopSounds.TimeResume, ts, 5, 1, 0.15)
+    TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.8), {Saturation = 0}):Play()
+    TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.8), {Contrast = 0}):Play()
+    settings().Network.IncomingReplicationLag = 0
+    coroutine.wrap(function()
+        wait(1.5)
+    for i,v in pairs(unfreeze) do
+        pcall(function()
+            v.Anchored = false
+        end)
+    for i,v in pairs(connect) do
+        pcall(function()
+            v:Disconnect()
+        end)
+    end
+      pcall(function()
+            	if v:FindFirstChild("SpeedVal~~~") then
+					MultiTween(v,"PlaybackSpeed",v:FindFirstChild("SpeedVal~~~").Value,2)
+					v:FindFirstChild("SpeedVal~~~"):Destroy()
+			end
+        end)
+    end
+    pcall(function()
+        ee:Disconnect()
+    end)
+    health = {}
+    unfreeze = {}
+    end)()
+    cantimestop = true
+    wait(1.5) -- cooldown
+    cooldown = false
+end
+
+function timeskip(key)
+key = key:lower()
+if key == "v" then
+song = Instance.new("Sound", Workspace)
+song.SoundId = "rbxassetid://5482711860" 
+song.Playing = true
+song.Looped = false
+song.Volume = 1
+wait(0.4)
+local root = plr.Character.HumanoidRootPart
+local pos = mouse.Hit.Position+Vector3.new(0,2.5,0)
+local offset = pos-root.Position
+root.CFrame = root.CFrame + root.CFrame.lookVector*30
+song = Instance.new("Sound", Workspace)
+song.SoundId = "rbxassetid://6859643048" 
+song.Playing = true
+song.Looped = false
+song.Volume = 1
+end
+end
+mouse.KeyDown:Connect(timeskip)
+
+function booktele(key)
+key = key:lower()
+if key == "y" then
+if mouse.Target and mouse.Target.Parent:FindFirstChild("Humanoid") then
+		local horp = mouse.Target.Parent:FindFirstChild("HumanoidRootPart")
+			root.CFrame = horp.CFrame + horp.CFrame.lookVector * -9
+		local char = mouse.Target.Parent
+song = Instance.new("Sound", Workspace)
+song.SoundId = "rbxassetid://5597282909" 
+song.Playing = true
+song.Looped = false
+song.Volume = 1
+song = Instance.new("Sound", Workspace)
+song.SoundId = "rbxassetid://4775994326" 
+song.Playing = true
+song.Looped = false
+song.Volume = 1.5
+TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.2), {Saturation = -1.2, Brightness = -0.1}):Play();
+wait(.2)
+TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.2), {Saturation = 0, Brightness = 0}):Play();
+end
+end
+end
+mouse.KeyDown:Connect(booktele)
+ 
+mouse.KeyDown:connect(function(key)
+    if str.lower(key) == 'f' and cantimestop and cooldown == false then
+        timestop()
+    elseif str.lower(key) == 'f' and cantimestop == false and cooldown then
+        timeresume()
+    end
+end)
+
+--Notification--
+
+local Sound = Instance.new("Sound",game:GetService("SoundService"))
+Sound.SoundId = "rbxassetid://4845894614"
+Sound:Play()
+game:GetService("StarterGui"):SetCore("SendNotification",{["Title"] = "The World's Unknown Ability",["Text"] = "Press F to stop time.",["Duration"] = 20,["Button1"] = "Okay."})
